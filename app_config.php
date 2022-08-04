@@ -777,4 +777,79 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
+$y=1;
+$apps[$x]['db'][$y]['table']['name'] = "v_scheduled_reports";
+$apps[$x]['db'][$y]['table']['parent'] = "";
+$z=0;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "id";
+$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
+$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
+$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
+$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
+$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_domains';
+$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'domain_uuid';
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "report_name";
+$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "report_format";
+$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "report_timezone";
+$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "report_emails";
+$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "scheduled";
+$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "report_params";
+$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+
+$y=2;
+$apps[$x]['db'][$y]['table']['name'] = "v_scheduled_reports_logs";
+$apps[$x]['db'][$y]['table']['parent'] = "";
+$z=0;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "id";
+$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
+$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
+$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
+$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "report_id";
+$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "integer";
+$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
+$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "integer";
+$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
+$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_scheduled_reports";
+$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "id";
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "dtime";
+$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "timestamp";
+$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "timestamp";
+$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "timestamp";
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "filename";
+$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+
+
+
+
+
 ?>
