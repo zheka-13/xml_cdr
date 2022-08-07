@@ -2940,4 +2940,29 @@ $text['button-advanced_search']['ru-ru'] = "Расширенный поиск";
 $text['button-advanced_search']['sv-se'] = "Avancerad";
 $text['button-advanced_search']['uk-ua'] = "";
 
+
+$text['button-toggle_scheduled_reports']['en-us'] = "Scheduled reports";
+$text['button-show_scheduled_reports']['en-us'] = "Show reports";
+$text['scheduled-report_name']['en-us'] = "Report name";
+$text['scheduled-report_emails_placeholder']['en-us'] = "Report emails. Use comma as a delimiter";
+$text['button-add_scheduled_report']['en-us'] = "Add";
+$text['scheduled-heading']['en-us'] = "Scheduled reports";
+$text['button-add_scheduled_title']['en-us'] = "Create scheduled report based on current search";
+$text['label-report_name']['en-us'] = "Report";
+$text['label-report_format']['en-us'] = "Format";
+$text['label-report_timezone']['en-us'] = "Timezone";
+$text['label-report_emails']['en-us'] = "Emails";
+$text['label-report_scheduled']['en-us'] = "Period";
+$text['label-report_info']['en-us'] = "Info";
+$text['label-report_manage']['en-us'] = "Management";
+$text['error-report_name']['en-us'] = "Report name is empty";
+$text['error-report_emails']['en-us'] = "No valid emails are found";
+$text['error-report_period']['en-us'] = "Unknown period";
+$text['error-report_format']['en-us'] = "Unknown report format";
+$text['period-day']['en-us'] = "Daily";
+$text['period-week']['en-us'] = "Weekly";
+$text['period-month']['en-us'] = "Monthly";
+$text['error-report_not_found']['en-us'] = "Report not found";
+
+
 ?>
