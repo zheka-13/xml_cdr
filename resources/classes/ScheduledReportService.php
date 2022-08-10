@@ -2,13 +2,70 @@
 
 class ScheduledReportService
 {
-
+    private $config;
+    private $db;
+    private $mailer;
     const FORMATS = ['csv', 'pdf'];
     const PERIODS = ['day', 'week', 'month'];
 
     public function __construct()
     {
+        $this->config = include 'schedule_reports_config.php';
         $this->db = new database;
+        $this->config['storage_path'] = rtrim($this->config['storage_path'], "/");
+    }
+
+    public function getReportUser()
+    {
+        return $this->config['report_user'];
+    }
+
+    public function getReportPermissions()
+    {
+        return $this->config['report_permissions'];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function saveReport($report_id, $report_format, $content)
+    {
+        $file = $this->getStorage()."/".$this->getFileName($report_id, $report_format);
+        file_put_contents($file, $content);
+        return $file;
+    }
+
+    public function sendReport($report, $file)
+    {
+        $subject = "Cdr report ".$report['report_name']." on host ".$this->getHostname()." ".date("d.m.Y");
+        $message = "Cdr report ".$report['report_name']." on host ".$this->getHostname()." ".date("d.m.Y");
+        $mail = new PHPMailer();
+        $mail->Subject = $subject;
+        $mail->MsgHTML($message);
+        $mail->clearAllRecipients();
+        $emails = explode(",", $report['report_emails']);
+        foreach ($emails as $email){
+            $mail->AddAddress(trim($email));
+        }
+        $mail->addAttachment($file, basename($file));
+        if (!$mail->Send()) {
+            if (isset($mail->ErrorInfo) && strlen($mail->ErrorInfo) > 0) {
+                error_log($mail->ErrorInfo);
+            }
+        }
+    }
+
+    public function logReport($report, $file){
+        $query = "insert into v_scheduled_reports_logs (report_id, filename, dtime) values (:id, :filename, now()) returning id";
+        $data = $this->db->execute($query, [
+            "id" => $report['id'],
+            "filename" => basename($file)
+        ]);
+        $query = "update v_scheduled_reports set last_sent = now(), last_log_id = :log_id where id = :id";
+        $this->db->execute($query, [
+            "id" => $report['id'],
+            "log_id" => !empty($data[0]['id']) ? $data[0]['id'] : 0,
+        ]);
     }
 
     /**
@@ -132,6 +189,22 @@ class ScheduledReportService
         return $data[0];
     }
 
+    public function getPendingReports()
+    {
+        $where = ["'day'"];
+        if (date('j') == 1){
+            $where[] = "'month'";
+        }
+        if (date('N') == 1){
+            $where[] = "'week'";
+        }
+        $where_string = " (now()::date at time zone report_timezone  > last_sent::date at time zone report_timezone or last_sent is null) and scheduled in (".implode(",", $where).") ";
+
+        $query = "select * from v_scheduled_reports where ".$where_string." order by  id asc limit 5";
+        return  $this->db->select($query, []);
+
+    }
+
     /**
      * @param $emails_string
      * @return array
@@ -171,6 +244,41 @@ class ScheduledReportService
         if (!in_array($report_format, self::FORMATS)){
             throw new Exception('error-report_format');
         }
+    }
+
+    /**
+     * @return mixed|string
+     * @throws Exception
+     */
+    private function getStorage()
+    {
+        if (!empty($this->config['storage_path'])){
+            if (is_writable($this->config['storage_path'])){
+                return $this->config['storage_path'];
+            }
+        }
+        if (is_writable("/tmp")){
+            return "/tmp";
+        }
+        throw new Exception("No writable storage found");
+    }
+
+    private function getFileName($id, $format)
+    {
+        $filename = "cdr_report_".$id;
+        $host = $this->getHostname();
+        if (!empty($host)){
+            $filename .= "_".$host;
+        }
+        return $filename."_".date("Y-m-d").".".$format;
+    }
+
+    private function getHostname(){
+        $hostname = "";
+        if (is_file("/etc/hostname") && is_readable("/etc/hostname")){
+            $hostname = trim(file_get_contents("/etc/hostname"));
+        }
+        return $hostname;
     }
 
 

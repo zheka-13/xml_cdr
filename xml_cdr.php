@@ -519,7 +519,7 @@
 		echo "<div style='font-size: 85%; padding-top: 12px; margin-bottom: 40px;'>".$text['description_search']."</div>\n";
 		echo "</form>";
 
-		include_once "xml_cdr_scheduled_reports_panel.php";
+		include_once "scheduled_reports_panel.php";
 	}
 
 //mod paging parameters for inclusion in column sort heading links

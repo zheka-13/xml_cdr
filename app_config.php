@@ -818,6 +818,19 @@ $z++;
 $apps[$x]['db'][$y]['fields'][$z]['name'] = "report_params";
 $apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 $apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "last_sent";
+$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "timestamp";
+$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "timestamp";
+$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "timestamp";
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+$z++;
+$apps[$x]['db'][$y]['fields'][$z]['name'] = "last_log_id";
+$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "integer";
+$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
+$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "integer";
+$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+
 
 $y=2;
 $apps[$x]['db'][$y]['table']['name'] = "v_scheduled_reports_logs";
