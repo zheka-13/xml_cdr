@@ -71,7 +71,7 @@ if($cronHelper->lock() !== FALSE) {
             if (!empty($result)) {
                 $service->sendReport($report, $file);
             }
-            //$service->logReport($report, $file);
+            $service->logReport($report, $file);
         }
         catch (Exception $e){
             error_log($e->getMessage());
