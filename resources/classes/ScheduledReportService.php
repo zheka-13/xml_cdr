@@ -35,6 +35,11 @@ class ScheduledReportService
         return $file;
     }
 
+    /**
+     * @param $report
+     * @param $file
+     * @return void
+     */
     public function sendReport($report, $file)
     {
         $subject = "Cdr report ".$report['report_name']." on host ".$this->getHostname()." ".date("d.m.Y");
@@ -76,6 +81,11 @@ class ScheduledReportService
         }
     }
 
+    /**
+     * @param $report
+     * @param $file
+     * @return void
+     */
     public function logReport($report, $file){
         $query = "insert into v_scheduled_reports_logs (report_id, filename, dtime) values (:id, :filename, now()) returning id";
         $data = $this->db->execute($query, [
@@ -101,6 +111,36 @@ class ScheduledReportService
             $tz[] = $row['name'];
         }
         return $tz;
+    }
+
+    /**
+     * @param $report
+     * @return mixed
+     */
+    public function buildReportParams($report){
+        parse_str($report['report_params'], $params);
+        $params['answer_stamp_begin'] = "";
+        $params['answer_stamp_end'] = "";
+        $params['end_stamp_begin'] = "";
+        $params['end_stamp_end'] = "";
+        if ($report['scheduled'] == 'day'){
+            $start = new DateTime('yesterday');
+            $params['start_stamp_begin'] = $start->format('Y-m-d 00:00');
+            $params['start_stamp_end'] = $start->format('Y-m-d 23:59');
+        }
+        if ($report['scheduled'] == 'week'){
+            $start = new DateTime('Monday last week');
+            $end = new DateTime('Sunday last week');
+            $params['start_stamp_begin'] = $start->format('Y-m-d 00:00');
+            $params['start_stamp_end'] = $end->format('Y-m-d 23:59');
+        }
+        if ($report['scheduled'] == 'month'){
+            $start = new DateTime('first day of last month');
+            $end = new DateTime('last day of last month');
+            $params['start_stamp_begin'] = $start->format('Y-m-d 00:00');
+            $params['start_stamp_end'] = $end->format('Y-m-d 23:59');
+        }
+        return $params;
     }
 
     /**

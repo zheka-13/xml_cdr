@@ -4,13 +4,12 @@ return [
     "storage_path" => "/opt/test", //must be writable by the www-data user
     "keep_reports_period" => 90, // in days . 0 - forever, -1 - do not keep
     "report_user" => "admin",
-    "use_smtp" => false,
     "smtp" => [
-        "host" => "",
+        "host" => "", // leave empty if you don't want to use smtp server
         "port" => 25,
         "username" => "",
         "password" => "",
-        "encryption" => "",
+        "encryption" => "", //'' or 'ssl' or 'tls'
     ],
     "report_permissions" => [
         "xml_cdr_export_csv" => true,

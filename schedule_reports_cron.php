@@ -33,39 +33,21 @@ if($cronHelper->lock() !== FALSE) {
     foreach ($reports as $report){
         $_REQUEST = [];
         $_REQUEST['export_format'] = $report['report_format'];
-        parse_str($report['report_params'], $params);
-        $params['answer_stamp_begin'] = "";
-        $params['answer_stamp_end'] = "";
-        $params['end_stamp_begin'] = "";
-        $params['end_stamp_end'] = "";
-        if ($report['scheduled'] == 'day'){
-            $start = new DateTime('yesterday');
-            $params['start_stamp_begin'] = $start->format('Y-m-d 00:00');
-            $params['start_stamp_end'] = $start->format('Y-m-d 23:59');
-        }
-        if ($report['scheduled'] == 'week'){
-            $start = new DateTime('Monday last week');
-            $end = new DateTime('Sunday last week');
-            $params['start_stamp_begin'] = $start->format('Y-m-d 00:00');
-            $params['start_stamp_end'] = $end->format('Y-m-d 23:59');
-        }
-        if ($report['scheduled'] == 'month'){
-            $start = new DateTime('first day of last month');
-            $end = new DateTime('last day of last month');
-            $params['start_stamp_begin'] = $start->format('Y-m-d 00:00');
-            $params['start_stamp_end'] = $end->format('Y-m-d 23:59');
-        }
+
+        $params = $service->buildReportParams($report);
+
         foreach ($params as $key => $val){
             $_REQUEST[$key] = $val;
         }
         $domain_uuid = $report['domain_uuid'];
         $_SESSION['domain']['time_zone']['name'] = $report['report_timezone'];
         $data_body = [];
-        ob_start();
 
+        ob_start();
         include "xml_cdr_export.php";
         $res = ob_get_contents();
         ob_end_clean();
+
         try {
             $file = $service->saveReport($report['id'], $report['report_format'], $res);
             if (!empty($result)) {
