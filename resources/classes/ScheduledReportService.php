@@ -42,6 +42,7 @@ class ScheduledReportService
         $mail = new PHPMailer();
         if (!empty($this->config['smtp']['host'])){
             $mail->IsSMTP();
+            $mail->Timeout = 10;
             $mail->SMTPSecure = $this->config['smtp']['encryption'];
             $mail->Host = $this->config['smtp']['host'];
             $mail->Port = $this->config['smtp']['port'];
