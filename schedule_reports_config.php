@@ -10,6 +10,7 @@ return [
         "port" => 25,
         "username" => "",
         "password" => "",
+        "encryption" => "",
     ],
     "report_permissions" => [
         "xml_cdr_export_csv" => true,

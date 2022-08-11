@@ -40,6 +40,26 @@ class ScheduledReportService
         $subject = "Cdr report ".$report['report_name']." on host ".$this->getHostname()." ".date("d.m.Y");
         $message = "Cdr report ".$report['report_name']." on host ".$this->getHostname()." ".date("d.m.Y");
         $mail = new PHPMailer();
+        if (!empty($this->config['smtp']['host'])){
+            $mail->IsSMTP();
+            $mail->SMTPSecure = $this->config['smtp']['encryption'];
+            $mail->Host = $this->config['smtp']['host'];
+            $mail->Port = $this->config['smtp']['port'];
+            if (!empty($this->config['smtp']['username'])){
+                $mail->SMTPAuth = true;
+                $mail->Username = $this->config['smtp']['username'];
+                $mail->Password = $this->config['smtp']['password'];
+            }
+            if (!empty($this->config['smtp']['encryption'])){
+                $mail->SMTPOptions = [
+                    "ssl" => [
+                        "verify_peer" => false,
+                        "verify_peer_name" => false,
+                        "allow_self_signed" => true,
+                    ]
+                ];
+            }
+        }
         $mail->Subject = $subject;
         $mail->MsgHTML($message);
         $mail->clearAllRecipients();
