@@ -66,6 +66,10 @@ class ScheduledReportService
                 ];
             }
         }
+        if (!empty($this->config['email_from'])){
+            $mail->SetFrom($this->config['email_from']);
+            $mail->AddReplyTo($this->config['email_from']);
+        }
         $mail->Subject = $subject;
         $mail->MsgHTML($message);
         $mail->clearAllRecipients();

@@ -4,6 +4,7 @@ return [
     "storage_path" => "/opt/test", //must be writable by the www-data user
     "keep_reports_period" => 90, // in days . 0 - forever, -1 - do not keep
     "report_user" => "admin",
+    "email_from" => "", //From and Reply To email address
     "smtp" => [
         "host" => "", // leave empty if you don't want to use smtp server
         "port" => 25,
