@@ -8,6 +8,6 @@ Fusionpbx Call Detail Records app with scheduled reports
 
 # Setting up cron
 
-* add line to crontab with valid path to app cron script
+* add line to global crontab with valid path to app cron script
 
-`*/5     *       *       *       *       root    /path/to/file/schedule_reports_cron.php`
+`*/5     *       *       *       *       root  php  /path/to/file/schedule_reports_cron.php`
