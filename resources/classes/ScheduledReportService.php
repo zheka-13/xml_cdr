@@ -268,7 +268,7 @@ class ScheduledReportService
         if (date('N') == 1){
             $where[] = "'week'";
         }
-        $where_string = " ((now() at time zone report_timezone)::date  > (last_sent at time zone report_timezone)::date or last_sent is null) and scheduled in (".implode(",", $where).") ";
+        $where_string = " (((now() at time zone report_timezone)::date  > (last_sent at time zone report_timezone)::date) or last_sent is null) and scheduled in (".implode(",", $where).") ";
 
         $query = "select * from v_scheduled_reports where ".$where_string." order by  id asc limit 5";
         return  $this->db->select($query, []);
