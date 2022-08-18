@@ -45,7 +45,7 @@
 //additional includes
 	$rows_per_page = ($_SESSION['domain']['paging']['numeric'] != '') ? $_SESSION['domain']['paging']['numeric'] : 50;
 	$archive_request = $_POST['archive_request'] == 'true' ? true : false;
-	require_once "xml_cdr_inc.php";
+	require "xml_cdr_inc.php";
 
 //get the format
 	$export_format = $_REQUEST['export_format'];
