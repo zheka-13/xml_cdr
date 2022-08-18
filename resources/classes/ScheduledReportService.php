@@ -97,7 +97,7 @@ class ScheduledReportService
             "filename" => basename($file)
         ]);
         if (empty($report['last_sent'])){
-            $query = "update v_scheduled_reports set last_sent = ((now()::date + '00:00:00'::time) at time zone report_timezone)::timestamp(0), last_log_id = :log_id where id = :id";
+            $query = "update v_scheduled_reports set last_sent = ((now()::date + '1 day'::interval + '00:00:00'::time) at time zone report_timezone)::timestamp(0), last_log_id = :log_id where id = :id";
         }
         else{
             $query = "update v_scheduled_reports set last_sent = now(), last_log_id = :log_id where id = :id";
