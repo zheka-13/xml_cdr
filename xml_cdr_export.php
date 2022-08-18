@@ -190,7 +190,8 @@
 				$data_body[$p] .= '<td>'.$fields['caller_id_name'].'</td>';
 				$data_body[$p] .= '<td>'.$fields['caller_id_number'].'</td>';
 				$data_body[$p] .= '<td>'.format_phone($fields['destination_number']).'</td>';
-				$data_body[$p] .= '<td>'.$fields['start_stamp'].'</td>';
+				//$data_body[$p] .= '<td>'.$fields['start_stamp'].'</td>';
+				$data_body[$p] .= '<td>'.$fields['start_date_formatted']." ".$fields['start_time_formatted'].'</td>';
 				$total['tta'] += ($fields['tta'] > 0) ? $fields['tta'] : 0;
 				$data_body[$p] .= '<td align="right">'.(($fields['tta'] >= 0) ? $fields['tta'].'s' : null).'</td>';
 				$seconds = ($fields['hangup_cause'] == "ORIGINATOR_CANCEL") ? $fields['duration'] : round(($fields['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
