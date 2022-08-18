@@ -4,7 +4,6 @@ class ScheduledReportService
 {
     private $config;
     private $db;
-    private $mailer;
     const FORMATS = ['csv', 'pdf'];
     const PERIODS = ['day', 'week', 'month'];
 
@@ -28,9 +27,9 @@ class ScheduledReportService
     /**
      * @throws Exception
      */
-    public function saveReport($report_id, $report_format, $content)
+    public function saveReport($report, $content)
     {
-        $file = $this->getStorage()."/".$this->getFileName($report_id, $report_format);
+        $file = $this->getStorage()."/".$this->getFileName($report['id'], $report['report_format'], $report['domain_uuid']);
         file_put_contents($file, $content);
         return $file;
     }
@@ -42,8 +41,9 @@ class ScheduledReportService
      */
     public function sendReport($report, $file)
     {
-        $subject = "Cdr report ".$report['report_name']." on host ".$this->getHostname()." ".date("d.m.Y");
-        $message = "Cdr report ".$report['report_name']." on host ".$this->getHostname()." ".date("d.m.Y");
+        $domain_name = $this->getDomainName($report['domain_uuid']);
+        $subject = "Cdr report ".$report['report_name']." on host ".$domain_name." ".date("d.m.Y");
+        $message = "Cdr report ".$report['report_name']." on host ".$domain_name." ".date("d.m.Y");
         $mail = new PHPMailer();
         if (!empty($this->config['smtp']['host'])){
             $mail->IsSMTP();
@@ -339,22 +339,29 @@ class ScheduledReportService
         throw new Exception("No writable storage found");
     }
 
-    private function getFileName($id, $format)
+    private function getFileName($id, $format, $domain_uuid)
     {
         $filename = "cdr_report_".$id;
-        $host = $this->getHostname();
+        $host = $this->getDomainName($domain_uuid);
         if (!empty($host)){
             $filename .= "_".$host;
         }
         return $filename."_".date("Y-m-d").".".$format;
     }
 
-    private function getHostname(){
-        $hostname = "";
-        if (is_file("/etc/hostname") && is_readable("/etc/hostname")){
-            $hostname = trim(file_get_contents("/etc/hostname"));
+    /**
+     * @param $uuid
+     * @return mixed|string
+     */
+    private function getDomainName($uuid){
+        $query = "select domain_name from v_domains where domain_uuid = :domain_uuid limit 1";
+        $data = $this->db->select($query, [
+            "domain_uuid" => $uuid
+        ]);
+        if (!empty($data[0]['domain_name'])){
+            return $data[0]['domain_name'];
         }
-        return $hostname;
+        return "domain";
     }
 
 

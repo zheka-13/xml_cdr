@@ -49,7 +49,7 @@ if($cronHelper->lock() !== FALSE) {
         ob_end_clean();
 
         try {
-            $file = $service->saveReport($report['id'], $report['report_format'], $res);
+            $file = $service->saveReport($report, $res);
             if (!empty($result)) {
                 $service->sendReport($report, $file);
             }
