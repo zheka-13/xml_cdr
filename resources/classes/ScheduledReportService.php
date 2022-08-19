@@ -96,12 +96,7 @@ class ScheduledReportService
             "id" => $report['id'],
             "filename" => basename($file)
         ]);
-        if (empty($report['last_sent'])){
-            $query = "update v_scheduled_reports set last_sent = ((now()::date + '1 day'::interval + '00:00:00'::time) at time zone report_timezone)::timestamp(0), last_log_id = :log_id where id = :id";
-        }
-        else{
-            $query = "update v_scheduled_reports set last_sent = now(), last_log_id = :log_id where id = :id";
-        }
+        $query = "update v_scheduled_reports set last_sent = now(), last_log_id = :log_id where id = :id";
         $this->db->execute($query, [
             "id" => $report['id'],
             "log_id" => !empty($data[0]['id']) ? $data[0]['id'] : 0,
@@ -261,22 +256,15 @@ class ScheduledReportService
 
     public function getPendingReports()
     {
-        $where = ["'day'"];
-        if (date('j') == 1){
-            $where[] = "'month'";
-        }
-        if (date('N') == 1){
-            $where[] = "'week'";
-        }
-        $time_string = "(((now() at time zone report_timezone)::date  > (last_sent at time zone report_timezone)::date) or last_sent is null)";
-
+        $check_time = "((last_sent is null or ((now() at time zone report_timezone)::date > (last_sent::timestamptz at time zone report_timezone)::date)) 
+        and extract(hour from now()) = 0)";
         $where_string = "
-        ( ".$time_string." and scheduled = 'day')
+        (scheduled = 'day'
         or 
-        (scheduled = 'week' and extract(dow from now() at time zone report_timezone) = 1 and ".$time_string.")
+        (scheduled = 'week' and extract(dow from now() at time zone report_timezone) = 1)
         or
-        (scheduled = 'month' and extract(day from now() at time zone report_timezone) = 1 and ".$time_string.")";
-        $query = "select * from v_scheduled_reports where ".$where_string." order by  id asc limit 5";
+        (scheduled = 'month' and extract(day from now() at time zone report_timezone) = 1))";
+        $query = "select * from v_scheduled_reports where ".$check_time." and ".$where_string." order by  id asc limit 5";
         return  $this->db->select($query, []);
 
     }
