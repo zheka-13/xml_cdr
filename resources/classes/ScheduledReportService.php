@@ -257,7 +257,7 @@ class ScheduledReportService
     public function getPendingReports()
     {
         $check_time = "((last_sent is null or ((now() at time zone report_timezone)::date > (last_sent::timestamptz at time zone report_timezone)::date)) 
-        and extract(hour from now()) = 0)";
+        and extract(hour from now() at time zone report_timezone) = 0)";
         $where_string = "
         (scheduled = 'day'
         or 
