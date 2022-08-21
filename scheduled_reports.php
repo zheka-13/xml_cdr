@@ -102,19 +102,32 @@ echo "<th>".$text['label-report_format']."</th>\n";
 echo "<th>".$text['label-report_timezone']."</th>\n";
 echo "<th>".$text['label-report_emails']."</th>\n";
 echo "<th>".$text['label-report_scheduled']."</th>\n";
+echo "<th>".$text['label-report_filter']."</th>\n";
 echo "<th>".$text['label-report_info']."</th>\n";
 echo "<th>".$text['label-report_manage']."</th>\n";
 echo "</tr>";
 $reports = $service->getReports();
 
 foreach ($reports as $report){
-    echo "<tr>\n";
+    echo "<tr class='list-row'>\n";
     echo "<td class='middle'>".$report['report_name']."</td>\n";
     echo "<td class='middle'>".$report['report_format']."</td>\n";
     echo "<td class='middle'>".$report['report_timezone']."</td>\n";
     echo "<td class='middle'>".$report['report_emails']."</td>\n";
     echo "<td class='middle'>".$text['period-'.$report['scheduled']]."</td>\n";
-    echo "<td></td>\n";
+    echo "<td>";
+    $filter = $service->getSearchParams($report['report_params'], $text);
+    foreach ($filter as $key => $val){
+        echo "<strong>".$key."</strong> = ".$val."<br>";
+    }
+    echo "</td>\n";
+    echo "<td>";
+    if (!empty($report['last_sent_tz'])) {
+        echo $text['scheduled-last_sent'] . ": " . substr($report['last_sent_tz'], 0, 19) . "(" . $report['report_timezone'] . ")<br>";
+    }
+    echo "<a href='xml_cdr.php?".$service->makeSampleQuery($report['report_params'])."' 
+        title='".$text['scheduled-sample_link_title']."'>".$text['scheduled-sample_link']."</a>";
+    echo "</td>";
     echo "<td>";
     echo "<form action='scheduled_reports.php'  method='post'>\n";
     echo "<input type='hidden' name='action' value='del_report'>";

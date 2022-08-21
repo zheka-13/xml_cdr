@@ -2954,6 +2954,7 @@ $text['label-report_timezone']['en-us'] = "Timezone";
 $text['label-report_emails']['en-us'] = "Emails";
 $text['label-report_scheduled']['en-us'] = "Period";
 $text['label-report_info']['en-us'] = "Info";
+$text['label-report_filter']['en-us'] = "Filter";
 $text['label-report_manage']['en-us'] = "Management";
 $text['error-report_name']['en-us'] = "Report name is empty";
 $text['error-report_emails']['en-us'] = "No valid emails are found";
@@ -2963,6 +2964,8 @@ $text['period-day']['en-us'] = "Daily";
 $text['period-week']['en-us'] = "Weekly";
 $text['period-month']['en-us'] = "Monthly";
 $text['error-report_not_found']['en-us'] = "Report not found";
-
+$text['scheduled-sample_link']['en-us'] = "Report sample";
+$text['scheduled-sample_link_title']['en-us'] = "Show  report sample for today";
+$text['scheduled-last_sent']['en-us'] = "Last sent";
 
 ?>

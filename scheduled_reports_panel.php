@@ -2,7 +2,7 @@
 
 $service = new ScheduledReportService();
 $timezones = $service->getTimezones();
-echo "<div calss='action_bar' id='scheduled_reports_panel' style='display:none'>";
+echo "<div calss='action_bar' id='scheduled_reports_panel' style='display:none; padding-bottom: 20px'>";
 echo "<div class='heading'><b>".$text['scheduled-heading']."</b></div>";
 echo "<div class='actions' >";
 echo "<form id='scheduled_add_form' action='scheduled_reports.php'  method='post'>\n";

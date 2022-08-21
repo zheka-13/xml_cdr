@@ -123,10 +123,7 @@ class ScheduledReportService
      */
     public function buildReportParams($report){
         parse_str($report['report_params'], $params);
-        $params['answer_stamp_begin'] = "";
-        $params['answer_stamp_end'] = "";
-        $params['end_stamp_begin'] = "";
-        $params['end_stamp_end'] = "";
+        $params = $this->clearParams($params);
         if ($report['scheduled'] == 'day'){
             $start = new DateTime('yesterday');
             $params['start_stamp_begin'] = $start->format('Y-m-d 00:00');
@@ -145,6 +142,45 @@ class ScheduledReportService
             $params['start_stamp_end'] = $end->format('Y-m-d 23:59');
         }
         return $params;
+    }
+
+    /**
+     * @param $query_string
+     * @return string
+     */
+    public function makeSampleQuery($query_string){
+        parse_str($query_string, $params);
+        $params = $this->clearParams($params);
+        $params['start_stamp_begin'] = date('Y-m-d 00:00');
+        $params['start_stamp_end'] = date('Y-m-d 23:59');
+        return http_build_query($params);
+    }
+
+    /**
+     * @param $query_string
+     * @param $text
+     * @return array
+     */
+    public function getSearchParams($query_string, $text)
+    {
+        parse_str($query_string, $params);
+        $params = $this->clearParams($params);
+        $filter = [];
+        foreach ($params as $param => $val){
+            if (empty($val)){
+                continue;
+            }
+            if (!empty($text['label-'.$param])){
+                $filter[$text['label-'.$param]] = $val;
+                continue;
+            }
+            if (!empty($text['table-'.$param])){
+                $filter[$text['table-'.$param]] = $val;
+                continue;
+            }
+            $filter[$param] = $val;
+        }
+        return $filter;
     }
 
     /**
@@ -217,7 +253,7 @@ class ScheduledReportService
      */
     public function getReports()
     {
-        $query = "select * from v_scheduled_reports where domain_uuid = :domain_uuid order by id asc";
+        $query = "select *, last_sent::timestamptz at time zone report_timezone as last_sent_tz from v_scheduled_reports where domain_uuid = :domain_uuid order by id asc";
         return $this->db->select($query, [
             "domain_uuid" => $_SESSION['domain_uuid']
         ]);
@@ -352,5 +388,19 @@ class ScheduledReportService
         return "domain";
     }
 
+    /**
+     * @param $params
+     * @return mixed
+     */
+    private function clearParams($params)
+    {
+        $params['answer_stamp_begin'] = "";
+        $params['answer_stamp_end'] = "";
+        $params['end_stamp_begin'] = "";
+        $params['end_stamp_end'] = "";
+        $params['start_stamp_begin'] = "";
+        $params['start_stamp_end'] = "";
+        return $params;
+    }
 
 }
