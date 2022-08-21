@@ -89,18 +89,33 @@ class ScheduledReportService
      * @param $report
      * @param $file
      * @return void
+     * @throws Exception
      */
     public function logReport($report, $file){
+
+        if (!empty($this->config['keep_reports_period']) && $this->config['keep_reports_period'] == -1){
+            $query = "update v_scheduled_reports set last_sent = now(), where id = :id";
+            $this->db->execute($query, [
+                "id" => $report['id'],
+            ]);
+            if (is_file($file)){
+                unlink($file);
+            }
+            return;
+        }
+
         $query = "insert into v_scheduled_reports_logs (report_id, filename, dtime) values (:id, :filename, now()) returning id";
         $data = $this->db->execute($query, [
             "id" => $report['id'],
             "filename" => basename($file)
         ]);
+
         $query = "update v_scheduled_reports set last_sent = now(), last_log_id = :log_id where id = :id";
         $this->db->execute($query, [
             "id" => $report['id'],
             "log_id" => !empty($data[0]['id']) ? $data[0]['id'] : 0,
         ]);
+        $this->deleteOldReports($report['id']);
     }
 
     /**
@@ -262,6 +277,7 @@ class ScheduledReportService
     /**
      * @param $id
      * @return void
+     * @throws Exception
      */
     public function delReport($id)
     {
@@ -270,7 +286,21 @@ class ScheduledReportService
             "domain_uuid" => $_SESSION['domain_uuid'],
             "id" => $id
         ]);
+        $query = "delete from v_scheduled_reports_logs where report_id = :id";
+        $this->db->execute($query, [
+            "id" => $id
+        ]);
+        $data = glob($this->getStorage()."/".$this->getFilePatternByReport($id));
+        if (!empty($data)){
+            foreach ($data as $file){
+                if (is_file($file)){
+                    unlink($file);
+                }
+            }
+        }
     }
+
+
 
     /**
      * @param $id
@@ -374,6 +404,15 @@ class ScheduledReportService
     }
 
     /**
+     * @param $id
+     * @return string
+     */
+    private function getFilePatternByReport($id)
+    {
+        return  "cdr_report_".$id."_*";
+    }
+
+    /**
      * @param $uuid
      * @return mixed|string
      */
@@ -402,5 +441,26 @@ class ScheduledReportService
         $params['start_stamp_end'] = "";
         return $params;
     }
+
+    /**
+     * @throws Exception
+     */
+    private function deleteOldReports($report_id)
+    {
+        if (!empty($this->config['keep_reports_period']) && $this->config['keep_reports_period']>0){
+            $query = "select * from v_scheduled_reports_logs where report_id = :id and dtime < (now() - '".$this->config['keep_reports_period']." days'::interval) ";
+            $data = $this->db->select($query, [
+                "id" => $report_id
+            ]);
+            foreach ($data as $row){
+                $query = "delete from v_scheduled_reports_logs where id = ".$row['id'];
+                $this->db->execute($query, []);
+                if (is_file($this->getStorage()."/".$row['filename'])){
+                    unlink($this->getStorage()."/".$row['filename']);
+                }
+            }
+        }
+    }
+
 
 }
