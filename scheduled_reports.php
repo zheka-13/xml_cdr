@@ -113,7 +113,7 @@ foreach ($reports as $report){
     echo "<td class='middle'>".$report['report_name']."</td>\n";
     echo "<td class='middle'>".$report['report_format']."</td>\n";
     echo "<td class='middle'>".$report['report_timezone']."</td>\n";
-    echo "<td class='middle'>".$report['report_emails']."</td>\n";
+    echo "<td class='middle'>".str_replace(",", "<br>", $report['report_emails'])."</td>\n";
     echo "<td class='middle'>".$text['period-'.$report['scheduled']]."</td>\n";
     echo "<td>";
     $filter = $service->getSearchParams($report['report_params'], $text);
