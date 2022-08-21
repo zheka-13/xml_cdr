@@ -2967,5 +2967,10 @@ $text['error-report_not_found']['en-us'] = "Report not found";
 $text['scheduled-sample_link']['en-us'] = "Report sample";
 $text['scheduled-sample_link_title']['en-us'] = "Show  report sample for today";
 $text['scheduled-last_sent']['en-us'] = "Last sent";
-
+$text['button-log']['en-us'] = "Log";
+$text['scheduled-log_heading']['en-us'] = "Scheduled report's log";
+$text['label-report_time']['en-us'] = "Sent time";
+$text['label-report_file']['en-us'] = "Filename";
+$text['label-report_size']['en-us'] = "Filesize";
+$text['file_not_found_error']['en-us'] = "File not found";
 ?>

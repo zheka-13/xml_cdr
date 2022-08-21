@@ -134,6 +134,7 @@ foreach ($reports as $report){
     echo "<input type='hidden' name='report_id' value='".$report['id']."'>";
     echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'link'=>'']);
     echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>'scheduled_report_edit.php?id='.$report['id']]);
+    echo button::create(['type'=>'button','label'=>$text['button-log'],'icon'=>$_SESSION['theme']['button_icon_export'],'link'=>'scheduled_report_log.php?id='.$report['id']]);
     echo "</form>";
 
     echo "</td>\n";

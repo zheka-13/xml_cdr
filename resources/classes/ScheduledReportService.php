@@ -19,6 +19,7 @@ class ScheduledReportService
         return $this->config['report_user'];
     }
 
+
     public function getReportPermissions()
     {
         return $this->config['report_permissions'];
@@ -300,7 +301,33 @@ class ScheduledReportService
         }
     }
 
+    /**
+     * @param $id
+     * @param $timezone
+     * @return mixed
+     */
+    public function getReportLog($id, $timezone)
+    {
+        $query = "select *, dtime::timestamptz at time zone '".$timezone."' as dtime_tz 
+            from v_scheduled_reports_logs where  report_id = :id order by id desc";
+        return  $this->db->select($query, [
+            "id" => $id
+        ]);
 
+    }
+
+    /**
+     * @param $filename
+     * @return false|string
+     * @throws Exception
+     */
+    public function getFileContent($filename)
+    {
+        if (is_file($this->getStorage()."/".$filename)){
+            return file_get_contents($this->getStorage()."/".$filename);
+        }
+        throw new Exception('file_not_found_error');
+    }
 
     /**
      * @param $id
@@ -333,6 +360,19 @@ class ScheduledReportService
         $query = "select * from v_scheduled_reports where ".$check_time." and ".$where_string." order by  id asc limit 5";
         return  $this->db->select($query, []);
 
+    }
+
+    /**
+     * @param $filename
+     * @return string
+     * @throws Exception
+     */
+    public function getFileSize($filename)
+    {
+        if (is_file($this->getStorage()."/".$filename)){
+            return $this->humanSize(filesize($this->getStorage()."/".$filename));
+        }
+        return "0";
     }
 
     /**
@@ -460,6 +500,25 @@ class ScheduledReportService
                 }
             }
         }
+    }
+
+    /**
+     * @param $size
+     * @param $precision
+     * @return string
+     */
+    private function humanSize($size, $precision = 2)
+    {
+        $sign = 1;
+        if ($size < 0) {
+            $sign = -1;
+            $size = abs($size);
+        }
+
+        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        $power = $size > 0 ? floor(log($size, 1024)) : 0;
+
+        return round($sign * $size / (1024 ** $power), $precision) . ' ' . $units[$power];
     }
 
 
