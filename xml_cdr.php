@@ -511,10 +511,12 @@
 		}
 		echo button::create(['label'=>$text['button-reset'],'icon'=>$_SESSION['theme']['button_icon_reset'],'type'=>'button','link'=>($archive_request ? 'xml_cdr_archive.php' : 'xml_cdr.php')]);
 		echo button::create(['label'=>$text['button-search'],'icon'=>$_SESSION['theme']['button_icon_search'],'type'=>'submit','id'=>'btn_save','name'=>'submit']);
-		echo button::create(['type'=>'button','label'=>$text['button-toggle_scheduled_reports'],
-			'icon'=>$_SESSION['theme']['button_icon_email'],
-			'onclick' => "toggle_reports_panel()",
-			'link'=>"#", 'style'=>'margin-right: 15px;']);
+		if (permission_exists('scheduled_reports')) {
+			echo button::create(['type' => 'button', 'label' => $text['button-toggle_scheduled_reports'],
+				'icon' => $_SESSION['theme']['button_icon_email'],
+				'onclick' => "toggle_reports_panel()",
+				'link' => "#", 'style' => 'margin-right: 15px;']);
+		}
 		echo "</div>\n";
 		echo "<div style='font-size: 85%; padding-top: 12px; margin-bottom: 40px;'>".$text['description_search']."</div>\n";
 		echo "</form>";

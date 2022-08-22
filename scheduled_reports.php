@@ -133,9 +133,12 @@ foreach ($reports as $report){
     echo "<form action='scheduled_reports.php'  method='post'>\n";
     echo "<input type='hidden' name='action' value='del_report'>";
     echo "<input type='hidden' name='report_id' value='".$report['id']."'>";
-    echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'link'=>'']);
-    echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>'scheduled_report_edit.php?id='.$report['id']]);
-    echo button::create(['type'=>'button','label'=>$text['button-log'],'icon'=>$_SESSION['theme']['button_icon_export'],'link'=>'scheduled_report_log.php?id='.$report['id']]);
+    echo button::create(['type'=>'submit','label'=>$text['button-delete'],'icon'=>$_SESSION['theme']['button_icon_delete'],'link'=>'',
+        "style" => "margin-bottom:5px;margin-top:6px"]);
+    echo button::create(['type'=>'button','label'=>$text['button-edit'],'icon'=>$_SESSION['theme']['button_icon_edit'],'link'=>'scheduled_report_edit.php?id='.$report['id'],
+        "style" => "margin-bottom:5px"]);
+    echo button::create(['type'=>'button','label'=>$text['button-log'],'icon'=>$_SESSION['theme']['button_icon_export'],'link'=>'scheduled_report_log.php?id='.$report['id'],
+        "style" => "margin-bottom:5px"]);
     echo "</form>";
 
     echo "</td>\n";
