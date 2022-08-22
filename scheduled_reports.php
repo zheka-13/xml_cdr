@@ -93,6 +93,7 @@ echo "</div>\n";
 echo "	<div class='actions'>\n";
 echo button::create(['type'=>'button','label'=>$text['button-back'],'icon'=>$_SESSION['theme']['button_icon_back'],'link'=>'xml_cdr.php']);
 echo "</div>\n";
+echo "	<div style='clear: both;'></div>\n";
 echo "</div>\n";
 
 echo "<table class='list'>\n";
