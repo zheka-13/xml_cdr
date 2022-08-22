@@ -31,7 +31,7 @@ require_once "resources/require.php";
 require_once "resources/check_auth.php";
 
 //check permisions
-if (permission_exists('xml_cdr_view')) {
+if (permission_exists('scheduled_reports')) {
     //access granted
 }
 else {
